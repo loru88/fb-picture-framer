@@ -23,7 +23,7 @@ window.uploadPicture = function(callback){
     size: "viewport"
   }).then(function(dataURI){
     var formData = new FormData();
-    formData.append("design", $("#fg").data("design"));
+    formData.append("design", $(".frame").data("design"));
     formData.append("image", dataURItoBlob(dataURI));
     $.ajax({
       url: "upload.php",
@@ -68,7 +68,7 @@ window.updatePreview = function(url) {
     },
   });
 
-  $("#fg").on('mouseover touchstart', function(){
+  $(".frame").on('mouseover touchstart', function(){
     document.getElementById("fg").style.zIndex = -1;
   });
   $(".cr-boundary").on('mouseleave touchend', function(){
@@ -108,7 +108,7 @@ window.onFileChange = function(input){
 
 $(document).ready(function(){
   $(".design").on("click", function(){
-    $("#fg").attr("src", $(this).attr("src")).data("design", $(this).data("design"));
+    $(".frame").attr("src", $(this).attr("src")).data("design", $(this).data("design"));
     $(".design.active").removeClass("active");
     $(this).addClass("active");
   });

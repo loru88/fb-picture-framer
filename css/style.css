@@ -8,8 +8,6 @@ html, body{
 }
 #wrapper{
 	min-height: 100%;
-  background-image: url(../images/bg.jpg);
-	background-color: #092e7b;
 	text-align: center;
 }
 #content{
@@ -27,16 +25,24 @@ html, body{
 	width: 400px;
 	background: #fff;
 }
-#profile-pic, #fg{
+
+#preview:hover .frame{
+    transition: opacity 0.4s;
+    opacity: 0;
+}
+
+#profile-pic, .frame{
 	width: 100%;
 }
-#fg{
+.frame{
 	position: absolute;
 	top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	z-index: 10;
+    opacity: 1;
+    transition: opacity 0.4s;
 }
 #fb-set-pic{
   display: table;

@@ -1,0 +1,22 @@
+{
+  "name": "fb-picture-framer",
+  "homepage": "https://github.com/loru88/fb-picture-framer",
+  "authors": [
+    "loru88 <loru88@gmail.com>"
+  ],
+  "description": "apply a custom frame to a facebook profile picture and share it on facebook timeline",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "Croppie": "croppie#^2.4.0"
+  }
+}
