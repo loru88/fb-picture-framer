@@ -5,11 +5,16 @@
 /*
  Facebook Picture Framer object
  */
-var FbPitureFrame = (function($, FB, undefined){
+var FbPitureFrame = (function($, croppie, undefined){
 
     var _defaults = {
-        previewDiv: "#crop-area"
+        previewDiv: "#crop-area",
+        framerEndpoint: "convert2.php?XDEBUG_SESSION_START=PHPSTORM"
     };
+
+    var _DOMnodes = {
+
+    }
 
     /*
      facebook sdk object
@@ -35,6 +40,7 @@ var FbPitureFrame = (function($, FB, undefined){
             // The person is logged into Facebook, but not your app.
             document.getElementById('status').innerHTML = 'Please log ' +
                 'into this app.';
+            _logInWithFacebook();
 
         } else {
             // The person is not logged into Facebook, so we're not sure if
@@ -54,6 +60,14 @@ var FbPitureFrame = (function($, FB, undefined){
             if (FB_response && !FB_response.error) {
                 _pictureUrl = FB_response.data.url;
                 _setPreviewDiv(_pictureUrl);
+
+                _DOMnodes.previewDiv.croppie({
+                    boundary: { height: 400, width: 400 },
+                    viewport: { height: 400, width: 400 }
+                });
+
+                $('#download').removeAttr('disabled');
+                $('#download').on('click', _downloadPictureFrame)
             }
         });
 
@@ -106,12 +120,12 @@ var FbPitureFrame = (function($, FB, undefined){
 
     var _setPreviewDiv = function(url){
 
-        $(_defaults.previewDiv +' img').attr("src", url);
+        _DOMnodes.previewDiv.attr("src", url);
 
     }
 
     _logInWithFacebook = function() {
-        FB.login(function(response) {
+        var fbPermissions = FB.login(function(response) {
             if (response.authResponse) {
                 alert('You are logged in &amp; cookie set!');
                 // Now you can redirect the user or do an AJAX request to
@@ -126,7 +140,33 @@ var FbPitureFrame = (function($, FB, undefined){
             scope: 'public_profile,publish_actions',
             return_scopes: true
         });
+
+        console.log(fbPermissions);
         return false;
+    };
+
+    var _downloadPictureFrame = function(){
+
+
+        var _crop_points = _DOMnodes.previewDiv.croppie('get');
+        var data = $.param({
+            "crop_points": _crop_points,
+            "frame": $(".frame").data("design")
+        });
+
+
+            $.ajax({
+
+                url: _defaults.framerEndpoint,
+                data: data,
+                type: "POST",
+                //success: callback,
+                error: function(){
+                    document.getElementById("download").innerHTML = "Download Profile Picture";
+                }
+            });
+
+
     };
 
 
@@ -152,6 +192,8 @@ var FbPitureFrame = (function($, FB, undefined){
             // Merge config into _defaults
             $.extend( _defaults, config );
 
+            _DOMnodes.previewDiv = $(_defaults.previewDiv +' img');
+
             if( typeof config.FB == "undefined") {
                 throw "Facebook SDK not correctly loaded";
                 return;
@@ -161,6 +203,7 @@ var FbPitureFrame = (function($, FB, undefined){
 
 
             $(document).ready(function(){
+
                 $(".design").on("click", function(){
                     $(".frame").attr("src", $(this).attr("src")).data("design", $(this).data("design"));
                     $(".design.active").removeClass("active");
@@ -183,7 +226,8 @@ window.fbAsyncInit = function() {
     FB.init({
         appId: '673520099498160',
         cookie: true, // This is important, it's not enabled by default
-        version: 'v2.2'
+        version: 'v2.8',
+        xfbml: false
     });
     FB.AppEvents.logPageView();
 
@@ -199,6 +243,6 @@ window.fbAsyncInit = function() {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) {return;}
     js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js";
+    js.src = "//connect.facebook.net/it_IT/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
